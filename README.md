@@ -5,7 +5,7 @@ This workflow was developed from the scripts for performing liftover on Plink fi
 
 **Instructions (anything marked with an asterisk is specific to users of EDDIE, University of Edinburgh Computing Cluster)**
 1. Put the original map/ped files in a folder called 'rawdata' in the same folder as the snakefile. It should produce lifted versions in a folder called 'lifteddata'.
-2.* 'module load anaconda'
-3.* 'source activate workflow' (see GWAS Snakemake Workflow, you can use the same environment)
+2. 'module load anaconda' *
+3. 'source activate workflow' (see GWAS Snakemake Workflow, you can use the same environment) *
 4. 'snakemake --use-conda --conda-frontend-conda -c*' 
       (* = number of cores, eg. 2. --use-conda because one of the steps needs conda to build a temporary environment with Python2, --conda-frontend-conda               because I figure it's easier than trying to mess around with switching default to mamba)

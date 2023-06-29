@@ -48,25 +48,13 @@ rule exclude_bad_lifts:
     shell: 
         'plink --file rawdata/{wildcards.sample} --recode --out rawdata/{wildcards.sample}-lifted2 --exclude rawdata/{wildcards.sample}-to_exclude.dat'
 
-#Because the good_lifted.map is not in chromosomal order, plink reorders it, jumbling all your genotypes to different SNPs.
-#What a pain in the ass. This step reorders it first, making a sacrificial 'reordered.ped' so we don't mess up our ped allele order
-#(from lifted2.ped) for our final output.
-rule reorder_map:
-    input:
-        ped = 'rawdata/{sample}-lifted2.ped', #this file has correct order
-        map = 'rawdata/{sample}-good_lifted.map' #this file doesn't
-    output:
-        temp('rawdata/{sample}-reordered.ped'), #this file doesn't, burn it.
-        temp('rawdata/{sample}-reordered.map') #this file has correct order
-    shell:
-        'plink --ped {input.ped} --map {input.map} --recode --out rawdata/{wildcards.sample}-reordered'
-
+#It appears the problem with SNP-shuffling has been fixed elsewhere and re-ordering is no longer necessary.
 rule create_final_lift:
     input:
-        ped = 'rawdata/{sample}-lifted2.ped', #this file has correct order
-        map = 'rawdata/{sample}-reordered.map' #this file has correct order
+        ped = 'rawdata/{sample}-lifted2.ped', #this file has Hg19 order
+        map = 'rawdata/{sample}-good_lifted.map' #this file has Hg38 order
     output:
-        'lifteddata/{sample}-GRCh38lift.ped', #this file now has correct order, I hope.
+        'lifteddata/{sample}-GRCh38lift.ped', #these files should now have correct order
         'lifteddata/{sample}-GRCh38lift.map'
     shell:
         'plink --ped {input.ped} --map {input.map} --recode --out lifteddata/{wildcards.sample}-GRCh38lift'
